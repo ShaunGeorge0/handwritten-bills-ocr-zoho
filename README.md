@@ -23,7 +23,7 @@ Pydantic Validation
 Evaluation Framework
     │
     ▼
-Gemini Selected
+Model Selected
     │
     ▼
 pushsamples.py
