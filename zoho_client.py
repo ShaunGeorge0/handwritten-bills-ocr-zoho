@@ -1,10 +1,49 @@
 # zoho_client.py
 import os
+import re
 import requests
 from dotenv import load_dotenv
 from schemas import ReceiptData
 
 load_dotenv()
+
+# CHANGE: Keyword rules used to route each receipt to the right Zoho expense
+# category instead of a single hardcoded account. Matched (word-boundary,
+# case-insensitive) against `description` and `vendor_name` together — the
+# two free-text fields most likely to carry a signal about what was bought.
+# Checked in order; the first category with a hit wins, so if a bill could
+# plausibly match more than one, whichever list it's checked against first
+# takes priority. Anything with no match falls back to "other_expenses".
+CATEGORY_KEYWORDS = {
+    "printing": [
+        "print", "printing", "printer", "photocopy", "xerox", "stationery",
+        "stationary", "cartridge", "toner", "binding",
+    ],
+    "travel": [
+        "travel", "travels", "transport", "transportation", "bus", "taxi",
+        "cab", "auto", "rickshaw", "fuel", "petrol", "diesel", "fare",
+        "toll", "parking", "train", "flight", "airfare", "car hire",
+        "hire charges",
+    ],
+    "meal_entertainment": [
+        "food", "restaurant", "meal", "lunch", "dinner", "breakfast",
+        "snack", "grocery", "groceries", "catering", "cafe", "café",
+        "coffee", "tea", "beverage", "hotel", "entertainment", "movie",
+        "bakery", "sweets", "sweet",
+    ],
+    # CHANGE: new category for physical inputs bought to make or sell
+    # something (as opposed to office supplies like paper/toner, which stay
+    # under "printing"). "paper" was dropped from printing's keyword list
+    # and left unassigned here on purpose — bare "paper" is too ambiguous
+    # between printer paper and a raw-material paper stock to route safely.
+    "rawmaterials_consumables": [
+        "flower", "flowers", "bouquet", "design", "designs", "cement",
+        "material", "materials", "raw material", "consumable",
+        "consumables", "wire", "supplies", "ingredient", "ingredients",
+        "fabric", "cloth", "yarn", "timber", "wood", "paint", "steel",
+        "iron rod",
+    ],
+}
 
 
 class ZohoBooksClient:
@@ -15,7 +54,23 @@ class ZohoBooksClient:
         self.client_secret = os.getenv("ZOHO_CLIENT_SECRET")
         self.refresh_token = os.getenv("ZOHO_REFRESH_TOKEN")
         self.organization_id = os.getenv("ZOHO_ORGANIZATION_ID")
+        # CHANGE: expenses used to all go to a single hardcoded account.
+        # Now each category has its own account_id, with ZOHO_ACCOUNT_OTHER_EXPENSES
+        # as the fallback for anything that doesn't match a keyword rule below.
+        # ZOHO_EXPENSE_ACCOUNT_ID is kept as a last-resort default in case the
+        # other_expenses account isn't configured either, so a missing .env
+        # entry fails loudly at the Zoho API rather than crashing here.
         self.expense_account_id = os.getenv("ZOHO_EXPENSE_ACCOUNT_ID")
+        self.category_account_ids = {
+            "printing": os.getenv("ZOHO_ACCOUNT_PRINTING"),
+            "travel": os.getenv("ZOHO_ACCOUNT_TRAVEL"),
+            # NOTE: your .env uses ZOHO_RAWMATERIALS_CONSUMABLES (no "ACCOUNT"
+            # in the name, unlike the others) — matched here exactly as you
+            # have it. Rename it if you'd rather keep the naming consistent.
+            "rawmaterials_consumables": os.getenv("ZOHO_RAWMATERIALS_CONSUMABLES"),
+            "meal_entertainment": os.getenv("ZOHO_ACCOUNT_MEAL_ENTERTAINMENT"),
+            "other_expenses": os.getenv("ZOHO_ACCOUNT_OTHER_EXPENSES"),
+        }
         # CHANGE: this was missing entirely. Zoho Books' Create Expense API
         # requires paid_through_account_id (the cash/bank account the money
         # left from) in addition to account_id (the expense category it's
@@ -82,6 +137,30 @@ class ZohoBooksClient:
 
         return None  # caller falls back to putting the name in the description
 
+    def categorize_expense(self, receipt: ReceiptData) -> str:
+        """Picks the Zoho expense account_id for a receipt based on keyword
+        matches in its description and vendor name (checked in this order:
+        printing, travel, meal & entertainment, raw materials & consumables).
+        Falls back to ZOHO_ACCOUNT_OTHER_EXPENSES (or, if that's unset, the
+        legacy single ZOHO_EXPENSE_ACCOUNT_ID) when nothing matches."""
+        haystack = f"{receipt.description or ''} {receipt.vendor_name or ''}".lower()
+
+        for category in ("printing", "travel", "meal_entertainment", "rawmaterials_consumables"):
+            keywords = CATEGORY_KEYWORDS[category]
+            if any(re.search(rf"\b{re.escape(kw)}\b", haystack) for kw in keywords):
+                account_id = self.category_account_ids.get(category)
+                if account_id:
+                    return account_id
+                # Keyword matched but that category's account_id isn't
+                # configured in .env — fall through to other_expenses
+                # rather than silently posting with no account_id at all.
+                break
+
+        return (
+            self.category_account_ids.get("other_expenses")
+            or self.expense_account_id
+        )
+
     def create_expense(self, receipt: ReceiptData) -> dict:
         """Posts structured receipt data to Zoho Books as a new expense entry."""
         access_token = self.get_access_token()
@@ -111,7 +190,7 @@ class ZohoBooksClient:
             description = f"[Vendor: {receipt.vendor_name}] " + description
 
         payload = {
-            "account_id": self.expense_account_id,
+            "account_id": self.categorize_expense(receipt),  # CHANGE: was self.expense_account_id (single category)
             "paid_through_account_id": self.paid_through_account_id,  # CHANGE: now included, required
             "date": receipt.date,
             "amount": receipt.total_amount,
