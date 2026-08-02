@@ -1,0 +1,2302 @@
+{
+  "summary": {
+    "Gemini 3.5 Flash-Lite": {
+      "Bills Attempted": 15,
+      "Bills Succeeded": 15,
+      "Failures": 0,
+      "Avg Latency (s)": 21.77,
+      "Total Tokens (in/out)": "19219.0/3947.0",
+      "Cost per Bill (USD)": 0.00104,
+      "Cost per 100 Bills (USD)": 0.1,
+      "Overall": {
+        "bills": 15,
+        "exact_match_accuracy": 13.3,
+        "field_accuracy": {
+          "vendor_name": 100.0,
+          "bill_number": 100.0,
+          "date": 80.0,
+          "currency": 100.0,
+          "total_amount": 93.3,
+          "gst_number": 93.3,
+          "description": 20.0
+        },
+        "missing_field_count": 0,
+        "hallucinated_field_count": 1,
+        "incorrect_field_count": 16
+      },
+      "Ambiguous": {
+        "bills": 4,
+        "exact_match_accuracy": 25.0,
+        "field_accuracy": {
+          "vendor_name": 100.0,
+          "bill_number": 100.0,
+          "date": 75.0,
+          "currency": 100.0,
+          "total_amount": 75.0,
+          "gst_number": 75.0,
+          "description": 50.0
+        },
+        "missing_field_count": 0,
+        "hallucinated_field_count": 1,
+        "incorrect_field_count": 4
+      },
+      "Non-Ambiguous": {
+        "bills": 11,
+        "exact_match_accuracy": 9.1,
+        "field_accuracy": {
+          "vendor_name": 100.0,
+          "bill_number": 100.0,
+          "date": 81.8,
+          "currency": 100.0,
+          "total_amount": 100.0,
+          "gst_number": 100.0,
+          "description": 9.1
+        },
+        "missing_field_count": 0,
+        "hallucinated_field_count": 0,
+        "incorrect_field_count": 12
+      }
+    },
+    "Nemotron Nano 12B VL (OpenRouter, free)": {
+      "Bills Attempted": 15,
+      "Bills Succeeded": 15,
+      "Failures": 0,
+      "Avg Latency (s)": 5.8,
+      "Total Tokens (in/out)": "55740.0/2408.0",
+      "Cost per Bill (USD)": 0.0,
+      "Cost per 100 Bills (USD)": 0.0,
+      "Overall": {
+        "bills": 15,
+        "exact_match_accuracy": 0.0,
+        "field_accuracy": {
+          "vendor_name": 80.0,
+          "bill_number": 86.7,
+          "date": 40.0,
+          "currency": 100.0,
+          "total_amount": 60.0,
+          "gst_number": 93.3,
+          "description": 13.3
+        },
+        "missing_field_count": 4,
+        "hallucinated_field_count": 3,
+        "incorrect_field_count": 27
+      },
+      "Ambiguous": {
+        "bills": 4,
+        "exact_match_accuracy": 0.0,
+        "field_accuracy": {
+          "vendor_name": 75.0,
+          "bill_number": 100.0,
+          "date": 50.0,
+          "currency": 100.0,
+          "total_amount": 25.0,
+          "gst_number": 100.0,
+          "description": 0.0
+        },
+        "missing_field_count": 1,
+        "hallucinated_field_count": 0,
+        "incorrect_field_count": 9
+      },
+      "Non-Ambiguous": {
+        "bills": 11,
+        "exact_match_accuracy": 0.0,
+        "field_accuracy": {
+          "vendor_name": 81.8,
+          "bill_number": 81.8,
+          "date": 36.4,
+          "currency": 100.0,
+          "total_amount": 72.7,
+          "gst_number": 90.9,
+          "description": 18.2
+        },
+        "missing_field_count": 3,
+        "hallucinated_field_count": 3,
+        "incorrect_field_count": 18
+      }
+    }
+  },
+  "raw": {
+    "Gemini 3.5 Flash-Lite": [
+      {
+        "file": "bill_01.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "CSSM BOOK HOUSE",
+            "extracted": "CSSM BOOK HOUSE",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "236",
+            "extracted": "236",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2025-11-27",
+            "extracted": "2025-11-07"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "3500.0",
+            "extracted": "3500.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Books purchase",
+            "extracted": "Book purchase",
+            "similarity": 0.333
+          }
+        },
+        "latency_s": 77.58,
+        "extracted": {
+          "vendor_name": "CSSM BOOK HOUSE",
+          "bill_number": "236",
+          "date": "2025-11-07",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "BRC Eng-R",
+              "quantity": 150.0,
+              "unit_price": 10.0,
+              "total_amount": 1500.0
+            },
+            {
+              "description": "BRC Mal-R",
+              "quantity": 200.0,
+              "unit_price": 10.0,
+              "total_amount": 2000.0
+            }
+          ],
+          "subtotal": 3500.0,
+          "gst_number": "",
+          "total_amount": 3500.0,
+          "payment_mode": "Cash",
+          "description": "Book purchase"
+        }
+      },
+      {
+        "file": "bill_02.jpg",
+        "ambiguous": true,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "FLOWER MART",
+            "extracted": "FLOWER MART",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "137",
+            "extracted": "137",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2024-09-21",
+            "extracted": "2024-09-21"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "incorrect",
+            "truth": "1030.0",
+            "extracted": "1180.0",
+            "abs_error": 150.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "correct",
+            "truth": "Flower purchase",
+            "extracted": "Flower purchase",
+            "similarity": 1.0
+          }
+        },
+        "latency_s": 76.68,
+        "extracted": {
+          "vendor_name": "FLOWER MART",
+          "bill_number": "137",
+          "date": "2024-09-21",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Orchid orange",
+              "quantity": 1300.0,
+              "unit_price": 0.23,
+              "total_amount": 300.0
+            },
+            {
+              "description": "Orchid yellow",
+              "quantity": 1500.0,
+              "unit_price": 0.2,
+              "total_amount": 300.0
+            },
+            {
+              "description": "Vaadamalli",
+              "quantity": 400.0,
+              "unit_price": 0.4,
+              "total_amount": 160.0
+            },
+            {
+              "description": "Arali",
+              "quantity": 300.0,
+              "unit_price": 0.4,
+              "total_amount": 120.0
+            },
+            {
+              "description": "Jamanthi",
+              "quantity": 300.0,
+              "unit_price": 0.5,
+              "total_amount": 150.0
+            },
+            {
+              "description": "Leaf",
+              "quantity": 1.0,
+              "unit_price": 150.0,
+              "total_amount": 150.0
+            }
+          ],
+          "subtotal": 1180.0,
+          "gst_number": "",
+          "total_amount": 1180.0,
+          "payment_mode": "",
+          "description": "Flower purchase"
+        }
+      },
+      {
+        "file": "bill_03.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "JOSE PRINTERS",
+            "extracted": "JOSE PRINTERS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "186",
+            "extracted": "186",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2024-12-02",
+            "extracted": "2024-12-02"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "3950.0",
+            "extracted": "3950.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "correct",
+            "truth": "Printing services",
+            "extracted": "Printing services for coupons, cards, and covers",
+            "similarity": 0.4
+          }
+        },
+        "latency_s": 51.19,
+        "extracted": {
+          "vendor_name": "JOSE PRINTERS",
+          "bill_number": "186",
+          "date": "2024-12-02",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Onam Food Coupon",
+              "quantity": 200.0,
+              "unit_price": 4.0,
+              "total_amount": 800.0
+            },
+            {
+              "description": "Christmas Card Printing",
+              "quantity": 300.0,
+              "unit_price": 2.0,
+              "total_amount": 600.0
+            },
+            {
+              "description": "Cover - Blue/White 1/4th",
+              "quantity": 350.0,
+              "unit_price": 4.0,
+              "total_amount": 1400.0
+            },
+            {
+              "description": "Cover - M/Size - Blue",
+              "quantity": 350.0,
+              "unit_price": 3.2857,
+              "total_amount": 1150.0
+            }
+          ],
+          "subtotal": 3950.0,
+          "gst_number": "",
+          "total_amount": 3950.0,
+          "payment_mode": "Cash",
+          "description": "Printing services for coupons, cards, and covers"
+        }
+      },
+      {
+        "file": "bill_04.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "PRINCY TRAVELS",
+            "extracted": "PRINCY TRAVELS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "023",
+            "extracted": "023",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2025-07-27",
+            "extracted": "2025-07-27"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "29500.0",
+            "extracted": "29500.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Travel booking",
+            "extracted": "Travel and bus hire charges",
+            "similarity": 0.2
+          }
+        },
+        "latency_s": 48.95,
+        "extracted": {
+          "vendor_name": "PRINCY TRAVELS",
+          "bill_number": "023",
+          "date": "2025-07-27",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Bus hire charges to Thekkady from 25.07.25 to 27.07.25",
+              "quantity": 1.0,
+              "unit_price": 29500.0,
+              "total_amount": 29500.0
+            }
+          ],
+          "subtotal": 29500.0,
+          "gst_number": "",
+          "total_amount": 29500.0,
+          "payment_mode": "",
+          "description": "Travel and bus hire charges"
+        }
+      },
+      {
+        "file": "bill_05.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "JO DESIGNS",
+            "extracted": "JO DESIGNS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "120",
+            "extracted": "120",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2025-12-13",
+            "extracted": "2025-12-13"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "400.0",
+            "extracted": "400.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Design services",
+            "extracted": "Funeral bouquet purchase",
+            "similarity": 0.0
+          }
+        },
+        "latency_s": 10.84,
+        "extracted": {
+          "vendor_name": "JO DESIGNS",
+          "bill_number": "120",
+          "date": "2025-12-13",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Funeral Bouquet",
+              "quantity": 1.0,
+              "unit_price": 400.0,
+              "total_amount": 400.0
+            }
+          ],
+          "subtotal": 400.0,
+          "gst_number": "",
+          "total_amount": 400.0,
+          "payment_mode": "",
+          "description": "Funeral bouquet purchase"
+        }
+      },
+      {
+        "file": "bill_06.jpg",
+        "ambiguous": true,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "Basil Industries",
+            "extracted": "Basil Industries",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "991",
+            "extracted": "991",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2025-11-25",
+            "extracted": "2025-11-25"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "1800.0",
+            "extracted": "1800.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "hallucinated",
+            "truth": null,
+            "extracted": "32AADFB1032A1ZN"
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "General purchase",
+            "extracted": "Musical instrument repair and leather change service",
+            "similarity": 0.0
+          }
+        },
+        "latency_s": 15.96,
+        "extracted": {
+          "vendor_name": "Basil Industries",
+          "bill_number": "991",
+          "date": "2025-11-25",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Bass Drum 16\", 20\" Two side leather change.",
+              "quantity": 2.0,
+              "unit_price": 900.0,
+              "total_amount": 1800.0
+            }
+          ],
+          "subtotal": 1800.0,
+          "gst_number": "32AADFB1032A1ZN",
+          "total_amount": 1800.0,
+          "payment_mode": "",
+          "description": "Musical instrument repair and leather change service"
+        }
+      },
+      {
+        "file": "bill_07.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "Seed 'N' Plants",
+            "extracted": "Seeds 'N' Plants",
+            "similarity": 0.967741935483871
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "8850",
+            "extracted": "8850",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "1750.0",
+            "extracted": "1750.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Nursery purchase",
+            "extracted": "Purchase of plants and seeds",
+            "similarity": 0.25
+          }
+        },
+        "latency_s": 13.28,
+        "extracted": {
+          "vendor_name": "Seeds 'N' Plants",
+          "bill_number": "8850",
+          "date": "",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Guava Plant",
+              "quantity": 11.0,
+              "unit_price": 60.0,
+              "total_amount": 660.0
+            },
+            {
+              "description": "Jamanthi",
+              "quantity": 15.0,
+              "unit_price": 75.0,
+              "total_amount": 1125.0
+            }
+          ],
+          "subtotal": 1785.0,
+          "gst_number": "",
+          "total_amount": 1750.0,
+          "payment_mode": "",
+          "description": "Purchase of plants and seeds"
+        }
+      },
+      {
+        "file": "bill_08.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "1048",
+            "extracted": "1048",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2026-02-12",
+            "extracted": "2026-02-12"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "1260.0",
+            "extracted": "1260.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "General purchase",
+            "extracted": "Registration and membership fees",
+            "similarity": 0.0
+          }
+        },
+        "latency_s": 9.7,
+        "extracted": {
+          "vendor_name": "",
+          "bill_number": "1048",
+          "date": "2026-02-12",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Registration",
+              "quantity": 1.0,
+              "unit_price": 300.0,
+              "total_amount": 300.0
+            },
+            {
+              "description": "Membership (96x10)",
+              "quantity": 10.0,
+              "unit_price": 96.0,
+              "total_amount": 960.0
+            }
+          ],
+          "subtotal": 1260.0,
+          "gst_number": "",
+          "total_amount": 1260.0,
+          "payment_mode": "",
+          "description": "Registration and membership fees"
+        }
+      },
+      {
+        "file": "bill_09.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "SPLASH FOOTWARES AND GIFTS",
+            "extracted": "SPLASH FOOTWARES AND GIFTS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "4231",
+            "extracted": "4231",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2024-11-09",
+            "extracted": "2024-04-09"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "12.0",
+            "extracted": "12.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Gift shop purchase",
+            "extracted": "Stapler pin purchase",
+            "similarity": 0.2
+          }
+        },
+        "latency_s": 4.65,
+        "extracted": {
+          "vendor_name": "SPLASH FOOTWARES AND GIFTS",
+          "bill_number": "4231",
+          "date": "2024-04-09",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Stapler pin",
+              "quantity": 1.0,
+              "unit_price": 12.0,
+              "total_amount": 12.0
+            }
+          ],
+          "subtotal": 12.0,
+          "gst_number": "",
+          "total_amount": 12.0,
+          "payment_mode": "",
+          "description": "Stapler pin purchase"
+        }
+      },
+      {
+        "file": "bill_10.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "JK CEMENT",
+            "extracted": "JK Cement",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2023-12-22",
+            "extracted": "2023-12-22"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "22.0",
+            "extracted": "22.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Cement purchase",
+            "extracted": "Purchase of M.S wire",
+            "similarity": 0.25
+          }
+        },
+        "latency_s": 2.35,
+        "extracted": {
+          "vendor_name": "JK Cement",
+          "bill_number": "",
+          "date": "2023-12-22",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "M.S wire",
+              "quantity": 24.2,
+              "unit_price": 0.909,
+              "total_amount": 22.0
+            }
+          ],
+          "subtotal": 22.0,
+          "gst_number": "",
+          "total_amount": 22.0,
+          "payment_mode": "",
+          "description": "Purchase of M.S wire"
+        }
+      },
+      {
+        "file": "bill_11.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "RAHATH FOODS",
+            "extracted": "RAHATH FOODS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "6453",
+            "extracted": "6453",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2024-11-09",
+            "extracted": "2024-11-09"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "1920.0",
+            "extracted": "1920.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Grocery purchase",
+            "extracted": "Food purchase from Rahath Foods",
+            "similarity": 0.167
+          }
+        },
+        "latency_s": 1.47,
+        "extracted": {
+          "vendor_name": "RAHATH FOODS",
+          "bill_number": "6453",
+          "date": "2024-11-09",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Porotta",
+              "quantity": 240.0,
+              "unit_price": 8.0,
+              "total_amount": 1920.0
+            }
+          ],
+          "subtotal": 1920.0,
+          "gst_number": "",
+          "total_amount": 1920.0,
+          "payment_mode": "",
+          "description": "Food purchase from Rahath Foods"
+        }
+      },
+      {
+        "file": "bill_12.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "date": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "820.0",
+            "extracted": "820.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "General purchase",
+            "extracted": "Food items purchase bill",
+            "similarity": 0.2
+          }
+        },
+        "latency_s": 3.22,
+        "extracted": {
+          "vendor_name": "",
+          "bill_number": "",
+          "date": "",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "\u0d1a\u0d3f\u0d15\u0d4d\u0d15\u0d7b",
+              "quantity": 2.0,
+              "unit_price": 270.0,
+              "total_amount": 540.0
+            },
+            {
+              "description": "\u0d15\u0d2a\u0d4d\u0d2a",
+              "quantity": 1.0,
+              "unit_price": 140.0,
+              "total_amount": 140.0
+            },
+            {
+              "description": "\u0d2a\u0d4a\u0d31\u0d4b\u0d1f\u0d4d\u0d1f",
+              "quantity": 1.0,
+              "unit_price": 140.0,
+              "total_amount": 140.0
+            }
+          ],
+          "subtotal": 820.0,
+          "gst_number": "",
+          "total_amount": 820.0,
+          "payment_mode": "",
+          "description": "Food items purchase bill"
+        }
+      },
+      {
+        "file": "bill_13.jpg",
+        "ambiguous": true,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "ALANKAR GIFTS",
+            "extracted": "ALANKAR GIFTS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "4691",
+            "extracted": "4691",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2020-03-09",
+            "extracted": "2020-03-09"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "3550.0",
+            "extracted": "3550.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": "32ASQPP1318L2ZH",
+            "extracted": "32ASQPP1318L2ZH",
+            "similarity": 1.0
+          },
+          "description": {
+            "status": "correct",
+            "truth": "Gift shop purchase",
+            "extracted": "Gift and household items purchase",
+            "similarity": 0.4
+          }
+        },
+        "latency_s": 4.19,
+        "extracted": {
+          "vendor_name": "ALANKAR GIFTS",
+          "bill_number": "4691",
+          "date": "2020-03-09",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "C. mug",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 462.0
+            },
+            {
+              "description": "Glass set",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 483.0
+            },
+            {
+              "description": "S. pan",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 270.0
+            },
+            {
+              "description": "Kadai",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 183.0
+            },
+            {
+              "description": "D. pan",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 47.0
+            },
+            {
+              "description": "Achappam mould",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 353.0
+            },
+            {
+              "description": "Egg beater",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 86.0
+            },
+            {
+              "description": "O. brush",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 95.0
+            },
+            {
+              "description": "Peeler",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 60.0
+            },
+            {
+              "description": "Knife",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 46.0
+            },
+            {
+              "description": "Lights",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 260.0
+            },
+            {
+              "description": "Stramer",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 455.0
+            }
+          ],
+          "subtotal": 3704.0,
+          "gst_number": "32ASQPP1318L2ZH",
+          "total_amount": 3550.0,
+          "payment_mode": "",
+          "description": "Gift and household items purchase"
+        }
+      },
+      {
+        "file": "bill_14.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "BISMI STORES",
+            "extracted": "BISMI STORES",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "026",
+            "extracted": "026",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "13000.0",
+            "extracted": "13000.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": "32AAKPY3208Q2Z4",
+            "extracted": "32AAKPY3208Q2Z4",
+            "similarity": 1.0
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Grocery purchase",
+            "extracted": "Furniture purchase",
+            "similarity": 0.333
+          }
+        },
+        "latency_s": 3.84,
+        "extracted": {
+          "vendor_name": "BISMI STORES",
+          "bill_number": "026",
+          "date": "",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Neel Kamal Bed",
+              "quantity": 1.0,
+              "unit_price": 13000.0,
+              "total_amount": 13000.0
+            }
+          ],
+          "subtotal": 13000.0,
+          "gst_number": "32AAKPY3208Q2Z4",
+          "total_amount": 13000.0,
+          "payment_mode": "",
+          "description": "Furniture purchase"
+        }
+      },
+      {
+        "file": "bill_15.jpg",
+        "ambiguous": true,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "Philip",
+            "extracted": "philip",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2025-07-16",
+            "extracted": "2024-10-14"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "1230.0",
+            "extracted": "1230.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "General purchase",
+            "extracted": "Food and snack purchase estimate",
+            "similarity": 0.2
+          }
+        },
+        "latency_s": 2.73,
+        "extracted": {
+          "vendor_name": "philip",
+          "bill_number": "",
+          "date": "2024-10-14",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "3 p",
+              "quantity": 1.0,
+              "unit_price": 450.0,
+              "total_amount": 450.0
+            },
+            {
+              "description": "3 dark donut",
+              "quantity": 1.0,
+              "unit_price": 180.0,
+              "total_amount": 180.0
+            },
+            {
+              "description": "sada pudin chat",
+              "quantity": 1.0,
+              "unit_price": 200.0,
+              "total_amount": 200.0
+            },
+            {
+              "description": "kappas",
+              "quantity": 1.0,
+              "unit_price": 110.0,
+              "total_amount": 110.0
+            },
+            {
+              "description": "kappa chiti",
+              "quantity": 1.0,
+              "unit_price": 110.0,
+              "total_amount": 110.0
+            },
+            {
+              "description": "vada",
+              "quantity": 1.0,
+              "unit_price": 120.0,
+              "total_amount": 120.0
+            },
+            {
+              "description": "jilebi",
+              "quantity": 1.0,
+              "unit_price": 120.0,
+              "total_amount": 120.0
+            },
+            {
+              "description": "sada bappari",
+              "quantity": 1.0,
+              "unit_price": 70.0,
+              "total_amount": 70.0
+            }
+          ],
+          "subtotal": 1230.0,
+          "gst_number": "",
+          "total_amount": 1230.0,
+          "payment_mode": "",
+          "description": "Food and snack purchase estimate"
+        }
+      }
+    ],
+    "Nemotron Nano 12B VL (OpenRouter, free)": [
+      {
+        "file": "bill_01.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "CSSM BOOK HOUSE",
+            "extracted": "CSSM BOOK HOUSE",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "236",
+            "extracted": "236",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2025-11-27",
+            "extracted": "1978-11-25"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "3500.0",
+            "extracted": "3500.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Books purchase",
+            "extracted": "CSSM Book House purchase",
+            "similarity": 0.2
+          }
+        },
+        "latency_s": 6.16,
+        "extracted": {
+          "vendor_name": "CSSM BOOK HOUSE",
+          "bill_number": "236",
+          "date": "1978-11-25",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "BRC Engg - R",
+              "quantity": 1.0,
+              "unit_price": 1500.0,
+              "total_amount": 1500.0
+            },
+            {
+              "description": "Dal - R",
+              "quantity": 1.0,
+              "unit_price": 2000.0,
+              "total_amount": 2000.0
+            }
+          ],
+          "subtotal": 3500.0,
+          "gst_number": "",
+          "total_amount": 3500.0,
+          "payment_mode": "Cash",
+          "description": "CSSM Book House purchase"
+        }
+      },
+      {
+        "file": "bill_02.jpg",
+        "ambiguous": true,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "FLOWER MART",
+            "extracted": "FLOWER MART",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "137",
+            "extracted": "137",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2024-09-21",
+            "extracted": "2024-09-21"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "incorrect",
+            "truth": "1030.0",
+            "extracted": "1480.0",
+            "abs_error": 450.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Flower purchase",
+            "extracted": "Market purchase for 400g of one item and 300g of another item.",
+            "similarity": 0.125
+          }
+        },
+        "latency_s": 5.78,
+        "extracted": {
+          "vendor_name": "FLOWER MART",
+          "bill_number": "137",
+          "date": "2024-09-21",
+          "currency": "INR",
+          "line_items": [],
+          "subtotal": 0.0,
+          "gst_number": "",
+          "total_amount": 1480.0,
+          "payment_mode": "Cash",
+          "description": "Market purchase for 400g of one item and 300g of another item."
+        }
+      },
+      {
+        "file": "bill_03.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "JOSE PRINTERS",
+            "extracted": "Jose Printers",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "186",
+            "extracted": "186",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2024-12-02",
+            "extracted": "2024-12-18"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "incorrect",
+            "truth": "3950.0",
+            "extracted": "4880.0",
+            "abs_error": 930.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "correct",
+            "truth": "Printing services",
+            "extracted": "Printing services",
+            "similarity": 1.0
+          }
+        },
+        "latency_s": 7.92,
+        "extracted": {
+          "vendor_name": "Jose Printers",
+          "bill_number": "186",
+          "date": "2024-12-18",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Ohm Food Coupon",
+              "quantity": 1.0,
+              "unit_price": 800.0,
+              "total_amount": 800.0
+            },
+            {
+              "description": "Christmas Card Personal",
+              "quantity": 3.0,
+              "unit_price": 200.0,
+              "total_amount": 600.0
+            },
+            {
+              "description": "Cover - Blue (U size)",
+              "quantity": 1.0,
+              "unit_price": 1400.0,
+              "total_amount": 1400.0
+            },
+            {
+              "description": "Cover - M Size - Blue",
+              "quantity": 1.0,
+              "unit_price": 1150.0,
+              "total_amount": 1150.0
+            }
+          ],
+          "subtotal": 4450.0,
+          "gst_number": "",
+          "total_amount": 4880.0,
+          "payment_mode": "Cash",
+          "description": "Printing services"
+        }
+      },
+      {
+        "file": "bill_04.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "PRINCY TRAVELS",
+            "extracted": "PRINCY TRAVELS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "missing",
+            "truth": "023",
+            "extracted": null
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2025-07-27",
+            "extracted": "2025-07-25"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "29500.0",
+            "extracted": "29500.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Travel booking",
+            "extracted": "Bus hire charges to Thekkady from 25/7/25",
+            "similarity": 0.0
+          }
+        },
+        "latency_s": 4.1,
+        "extracted": {
+          "vendor_name": "PRINCY TRAVELS",
+          "bill_number": "",
+          "date": "2025-07-25",
+          "currency": "INR",
+          "line_items": [],
+          "subtotal": 0.0,
+          "gst_number": "",
+          "total_amount": 29500.0,
+          "payment_mode": "Cash",
+          "description": "Bus hire charges to Thekkady from 25/7/25"
+        }
+      },
+      {
+        "file": "bill_05.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "incorrect",
+            "truth": "JO DESIGNS",
+            "extracted": "JO DESIGNS\nCANOPY APARTMENT",
+            "similarity": 0.5405405405405406
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "120",
+            "extracted": "120",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "missing",
+            "truth": "2025-12-13",
+            "extracted": null
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "400.0",
+            "extracted": "400.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Design services",
+            "extracted": "Bill for Bouquet Purchase",
+            "similarity": 0.0
+          }
+        },
+        "latency_s": 4.74,
+        "extracted": {
+          "vendor_name": "JO DESIGNS\nCANOPY APARTMENT",
+          "bill_number": "120",
+          "date": "",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Funsool Bouquet",
+              "quantity": 1.0,
+              "unit_price": 0.0,
+              "total_amount": 400.0
+            }
+          ],
+          "subtotal": 0.0,
+          "gst_number": "",
+          "total_amount": 400.0,
+          "payment_mode": "Cash",
+          "description": "Bill for Bouquet Purchase"
+        }
+      },
+      {
+        "file": "bill_06.jpg",
+        "ambiguous": true,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "Basil Industries",
+            "extracted": "Basil Industries",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "991",
+            "extracted": "991",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2025-11-25",
+            "extracted": "2025-11-25"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "incorrect",
+            "truth": "1800.0",
+            "extracted": "4600.0",
+            "abs_error": 2800.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "General purchase",
+            "extracted": "Service Book Purchase - Phoenix Bass Drum Supplies Sold by Basil Industries Music Store near Kaloor Bank Kalookul Malapuram from Reserve Banc in Cochin from Ernakulam onto cash paid integers apostrophe Cashidge GPay transaction notification application confirmation RFC comedy Phrase Come This document spell chess Kenny GPS PowerPoint Lux figure?",
+            "similarity": 0.021
+          }
+        },
+        "latency_s": 7.73,
+        "extracted": {
+          "vendor_name": "Basil Industries",
+          "bill_number": "991",
+          "date": "2025-11-25",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Bass Drum:",
+              "quantity": 2.0,
+              "unit_price": 0.0,
+              "total_amount": 0.0
+            },
+            {
+              "description": "Two Side Headhar Change:",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 1800.0
+            },
+            {
+              "description": "Advanced Cpip (Cpip):",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 500.0
+            },
+            {
+              "description": "Balance:",
+              "quantity": 0.0,
+              "unit_price": 0.0,
+              "total_amount": 1300.0
+            }
+          ],
+          "subtotal": 4600.0,
+          "gst_number": null,
+          "total_amount": 4600.0,
+          "payment_mode": "",
+          "description": "Service Book Purchase - Phoenix Bass Drum Supplies Sold by Basil Industries Music Store near Kaloor Bank Kalookul Malapuram from Reserve Banc in Cochin from Ernakulam onto cash paid integers apostrophe Cashidge GPay transaction notification application confirmation RFC comedy Phrase Come This document spell chess Kenny GPS PowerPoint Lux figure?"
+        }
+      },
+      {
+        "file": "bill_07.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "Seed 'N' Plants",
+            "extracted": "Seeds 'N' Plants",
+            "similarity": 0.967741935483871
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "8850",
+            "extracted": "8850",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "hallucinated",
+            "truth": null,
+            "extracted": "2021-01-15"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "1750.0",
+            "extracted": "1750.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Nursery purchase",
+            "extracted": "Purchase of plants",
+            "similarity": 0.333
+          }
+        },
+        "latency_s": 6.09,
+        "extracted": {
+          "vendor_name": "Seeds 'N' Plants",
+          "bill_number": "8850",
+          "date": "2021-01-15",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Guava Plant",
+              "quantity": 11.0,
+              "unit_price": 60.0,
+              "total_amount": 660.0
+            },
+            {
+              "description": "Jamanthi",
+              "quantity": 15.0,
+              "unit_price": 75.0,
+              "total_amount": 1125.0
+            }
+          ],
+          "subtotal": 1785.0,
+          "gst_number": "",
+          "total_amount": 1750.0,
+          "payment_mode": "Cash",
+          "description": "Purchase of plants"
+        }
+      },
+      {
+        "file": "bill_08.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "1048",
+            "extracted": "1048",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2026-02-12",
+            "extracted": "2026-02-12"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "incorrect",
+            "truth": "1260.0",
+            "extracted": "990.0",
+            "abs_error": 270.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "General purchase",
+            "extracted": "Membership Registration and Raja Salari Membership",
+            "similarity": 0.0
+          }
+        },
+        "latency_s": 5.14,
+        "extracted": {
+          "vendor_name": "",
+          "bill_number": "1048",
+          "date": "2026-02-12",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Registration Membership",
+              "quantity": 1.0,
+              "unit_price": 960.0,
+              "total_amount": 960.0
+            },
+            {
+              "description": "Raja Salari Membership",
+              "quantity": 1.0,
+              "unit_price": 30.0,
+              "total_amount": 30.0
+            }
+          ],
+          "subtotal": 990.0,
+          "gst_number": "",
+          "total_amount": 990.0,
+          "payment_mode": "Cash",
+          "description": "Membership Registration and Raja Salari Membership"
+        }
+      },
+      {
+        "file": "bill_09.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "SPLASH FOOTWARES AND GIFTS",
+            "extracted": "SPLASH FOOTWARES AND GIFTS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "4231",
+            "extracted": "4231",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2024-11-09",
+            "extracted": "2023-09-29"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "12.0",
+            "extracted": "12.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Gift shop purchase",
+            "extracted": "Office Supplies",
+            "similarity": 0.0
+          }
+        },
+        "latency_s": 7.02,
+        "extracted": {
+          "vendor_name": "SPLASH FOOTWARES AND GIFTS",
+          "bill_number": "4231",
+          "date": "2023-09-29",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Stapler",
+              "quantity": 1.0,
+              "unit_price": 0.0,
+              "total_amount": 12.0
+            }
+          ],
+          "subtotal": 12.0,
+          "gst_number": "",
+          "total_amount": 12.0,
+          "payment_mode": "Cash",
+          "description": "Office Supplies"
+        }
+      },
+      {
+        "file": "bill_10.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "incorrect",
+            "truth": "JK CEMENT",
+            "extracted": "J.K. Cement Ltd.",
+            "similarity": 0.72
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2023-12-22",
+            "extracted": "2023-12-22"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "incorrect",
+            "truth": "22.0",
+            "extracted": "58.33",
+            "abs_error": 36.33
+          },
+          "gst_number": {
+            "status": "hallucinated",
+            "truth": null,
+            "extracted": "27AABC1234D1ZEA"
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Cement purchase",
+            "extracted": "Mende purchase - construction materials from J.K. Cement",
+            "similarity": 0.286
+          }
+        },
+        "latency_s": 6.25,
+        "extracted": {
+          "vendor_name": "J.K. Cement Ltd.",
+          "bill_number": "",
+          "date": "2023-12-22",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Mende",
+              "quantity": 24.0,
+              "unit_price": 0.58,
+              "total_amount": 13.92
+            },
+            {
+              "description": "J.K.Cement Ltd",
+              "quantity": 1.0,
+              "unit_price": 27.0,
+              "total_amount": 27.0
+            }
+          ],
+          "subtotal": 40.92,
+          "gst_number": "27AABC1234D1ZEA",
+          "total_amount": 58.33,
+          "payment_mode": "Cash",
+          "description": "Mende purchase - construction materials from J.K. Cement"
+        }
+      },
+      {
+        "file": "bill_11.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "RAHATH FOODS",
+            "extracted": "RAHATH FOODS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "incorrect",
+            "truth": "6453",
+            "extracted": "21318181000312",
+            "similarity": 0.1111111111111111
+          },
+          "date": {
+            "status": "correct",
+            "truth": "2024-11-09",
+            "extracted": "2024-11-09"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "1920.0",
+            "extracted": "1920.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "correct",
+            "truth": "Grocery purchase",
+            "extracted": "Grocery purchase",
+            "similarity": 1.0
+          }
+        },
+        "latency_s": 4.92,
+        "extracted": {
+          "vendor_name": "RAHATH FOODS",
+          "bill_number": "21318181000312",
+          "date": "2024-11-09",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "PozoHa",
+              "quantity": 240.0,
+              "unit_price": 8.0,
+              "total_amount": 1920.0
+            }
+          ],
+          "subtotal": 1920.0,
+          "gst_number": "",
+          "total_amount": 1920.0,
+          "payment_mode": "Cash",
+          "description": "Grocery purchase"
+        }
+      },
+      {
+        "file": "bill_12.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "date": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "820.0",
+            "extracted": "820.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "missing",
+            "truth": "General purchase",
+            "extracted": null
+          }
+        },
+        "latency_s": 4.73,
+        "extracted": {
+          "vendor_name": "",
+          "bill_number": "",
+          "date": "",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "",
+              "quantity": 2.0,
+              "unit_price": 270.0,
+              "total_amount": 540.0
+            },
+            {
+              "description": "",
+              "quantity": 1.0,
+              "unit_price": 140.0,
+              "total_amount": 140.0
+            },
+            {
+              "description": "",
+              "quantity": 1.0,
+              "unit_price": 140.0,
+              "total_amount": 140.0
+            }
+          ],
+          "subtotal": 820.0,
+          "gst_number": "",
+          "total_amount": 820.0,
+          "payment_mode": "",
+          "description": ""
+        }
+      },
+      {
+        "file": "bill_13.jpg",
+        "ambiguous": true,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "ALANKAR GIFTS",
+            "extracted": "ALANKAR GIFTS",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "4691",
+            "extracted": "4691",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2020-03-09",
+            "extracted": "2020-09-03"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "incorrect",
+            "truth": "3550.0",
+            "extracted": "8755.0",
+            "abs_error": 5205.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": "32ASQPP1318L2ZH",
+            "extracted": "32ASQPP1318L2ZH",
+            "similarity": 1.0
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Gift shop purchase",
+            "extracted": "Gift purchase from Alankar Gifts",
+            "similarity": 0.333
+          }
+        },
+        "latency_s": 5.16,
+        "extracted": {
+          "vendor_name": "ALANKAR GIFTS",
+          "bill_number": "4691",
+          "date": "2020-09-03",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "G., Mr. S. Pan Randevi",
+              "quantity": 1.0,
+              "unit_price": 8704.0,
+              "total_amount": 8.0
+            }
+          ],
+          "subtotal": 8704.0,
+          "gst_number": "32ASQPP1318L2ZH",
+          "total_amount": 8755.0,
+          "payment_mode": "Cash",
+          "description": "Gift purchase from Alankar Gifts"
+        }
+      },
+      {
+        "file": "bill_14.jpg",
+        "ambiguous": false,
+        "fields": {
+          "vendor_name": {
+            "status": "correct",
+            "truth": "BISMI STORES",
+            "extracted": "BISMI STORES",
+            "similarity": 1.0
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": "026",
+            "extracted": "026",
+            "similarity": 1.0
+          },
+          "date": {
+            "status": "hallucinated",
+            "truth": null,
+            "extracted": "2023-07-05"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "13000.0",
+            "extracted": "13000.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": "32AAKPY3208Q2Z4",
+            "extracted": "32AAKPY3208Q2Z4",
+            "similarity": 1.0
+          },
+          "description": {
+            "status": "incorrect",
+            "truth": "Grocery purchase",
+            "extracted": "Steel Wooden Furniture purchase",
+            "similarity": 0.2
+          }
+        },
+        "latency_s": 6.68,
+        "extracted": {
+          "vendor_name": "BISMI STORES",
+          "bill_number": "026",
+          "date": "2023-07-05",
+          "currency": "INR",
+          "line_items": [
+            {
+              "description": "Steel Kearmal 6 ed Phop",
+              "quantity": 1.0,
+              "unit_price": 13000.0,
+              "total_amount": 13000.0
+            }
+          ],
+          "subtotal": 13000.0,
+          "gst_number": "32AAKPY3208Q2Z4",
+          "total_amount": 13000.0,
+          "payment_mode": "Cash",
+          "description": "Steel Wooden Furniture purchase"
+        }
+      },
+      {
+        "file": "bill_15.jpg",
+        "ambiguous": true,
+        "fields": {
+          "vendor_name": {
+            "status": "incorrect",
+            "truth": "Philip",
+            "extracted": "ESTIMATE",
+            "similarity": 0.14285714285714285
+          },
+          "bill_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "date": {
+            "status": "incorrect",
+            "truth": "2025-07-16",
+            "extracted": "2023-10-01"
+          },
+          "currency": {
+            "status": "correct",
+            "truth": "INR",
+            "extracted": "INR"
+          },
+          "total_amount": {
+            "status": "correct",
+            "truth": "1230.0",
+            "extracted": "1230.0",
+            "abs_error": 0.0
+          },
+          "gst_number": {
+            "status": "correct",
+            "truth": null,
+            "extracted": null
+          },
+          "description": {
+            "status": "missing",
+            "truth": "General purchase",
+            "extracted": null
+          }
+        },
+        "latency_s": 4.51,
+        "extracted": {
+          "vendor_name": "ESTIMATE",
+          "bill_number": null,
+          "date": "2023-10-01",
+          "currency": "INR",
+          "line_items": [],
+          "subtotal": 0.0,
+          "gst_number": "",
+          "total_amount": 1230.0,
+          "payment_mode": "Cash",
+          "description": ""
+        }
+      }
+    ]
+  }
+}
