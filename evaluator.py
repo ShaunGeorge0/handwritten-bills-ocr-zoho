@@ -25,7 +25,7 @@ RESULTS_JSON_PATH = "results.json"
 #   Claude:  https://www.anthropic.com/pricing
 # ------------------------------------------------------------------------------
 PRICING_USD_PER_MILLION_TOKENS = {
-    "Gemini 2.5 Flash": {"input": 0.15, "output": 1.25},
+    "Gemini 3.6 Flash": {"input": 1.50, "output": 7.50},
     "GPT-5 Mini": {"input": 0.25, "output": 2.00},
     "Claude Haiku 4.5": {"input": 1.00, "output": 5.00},
 }
@@ -51,8 +51,8 @@ AMOUNT_TOLERANCE_ABS = 1.0     # ₹1 absolute tolerance
 AMOUNT_TOLERANCE_PCT = 0.01    # or 1%, whichever is looser
 
 
-def fuzzy_match(a: str, b: str) -> tuple[bool, float]:
-    a, b = (a or "").strip().lower(), (b or "").strip().lower()
+def fuzzy_match(a, b) -> tuple[bool, float]:
+    a, b = str(a or "").strip().lower(), str(b or "").strip().lower()
     score = difflib.SequenceMatcher(None, a, b).ratio()
     return score >= FUZZY_MATCH_THRESHOLD, score
 
@@ -71,11 +71,11 @@ def score_bill(extracted: ReceiptData, truth: dict) -> dict:
         matched, sim = fuzzy_match(extracted.vendor_name, truth["vendor_name"])
         scores["vendor_name"] = {"match": matched, "similarity": round(sim, 3)}
 
-    if "bill_number" in truth:
-        matched, sim = fuzzy_match(extracted.bill_number or "", truth["bill_number"] or "")
+    if "bill_number" in truth and truth["bill_number"] is not None:
+        matched, sim = fuzzy_match(extracted.bill_number or "", truth["bill_number"])
         scores["bill_number"] = {"match": matched, "similarity": round(sim, 3)}
 
-    if "date" in truth:
+    if "date" in truth and truth["date"] is not None:
         scores["date"] = {"match": extracted.date == truth["date"]}
 
     if "currency" in truth:
@@ -101,7 +101,7 @@ def evaluate_models():
         ground_truth = json.load(f)
 
     models = {
-        "Gemini 2.5 Flash": extract_with_gemini,
+        "Gemini 3.6 Flash": extract_with_gemini,
         "GPT-5 Mini": extract_with_openai,
         "Claude Haiku 4.5": extract_with_claude,
     }
@@ -116,6 +116,7 @@ def evaluate_models():
         total_input_tokens = 0
         total_output_tokens = 0
         total_images = 0
+        successful_images = 0
         failures = 0
 
         for img_file, truth in ground_truth.items():
@@ -127,6 +128,7 @@ def evaluate_models():
             total_images += 1
             try:
                 result = extract_fn(img_path)
+                successful_images += 1
                 total_time += result.latency_s
                 total_input_tokens += result.input_tokens
                 total_output_tokens += result.output_tokens
@@ -163,16 +165,24 @@ def evaluate_models():
             total_input_tokens / 1_000_000 * rates["input"]
             + total_output_tokens / 1_000_000 * rates["output"]
         )
-        cost_per_bill = total_cost_usd / total_images if total_images else 0.0
+        if successful_images > 0:
+            avg_latency = round(total_time / successful_images, 2)
+            cost_per_bill = round(total_cost_usd / successful_images, 5)
+            cost_per_100 = round(cost_per_bill * 100, 2)
+        else:
+            avg_latency = None
+            cost_per_bill = None
+            cost_per_100 = None
 
         summary[model_name] = {
-            "Bills Processed": total_images,
+            "Bills Attempted": total_images,
+            "Bills Succeeded": successful_images,
             "Failures": failures,
-            "Avg Latency (s)": round(total_time / total_images, 2),
+            "Avg Latency (s)": avg_latency,
             "Per-Field Accuracy (%)": per_field_accuracy,
             "Total Tokens (in/out)": f"{total_input_tokens}/{total_output_tokens}",
-            "Cost per Bill (USD)": round(cost_per_bill, 5),
-            "Cost per 100 Bills (USD)": round(cost_per_bill * 100, 2),
+            "Cost per Bill (USD)": cost_per_bill,
+            "Cost per 100 Bills (USD)": cost_per_100,
         }
 
     print("\n" + "=" * 55)

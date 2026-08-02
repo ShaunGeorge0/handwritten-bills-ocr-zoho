@@ -2,13 +2,17 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field
 
+
 class LineItem(BaseModel):
-    description: str = Field(description="Name or description of the item/service")
+    description: str = Field(description="Name or description of the item or service purchased")
     quantity: float = Field(default=1.0, description="Quantity of items purchased")
     unit_price: float = Field(default=0.0, description="Price per individual unit")
     total_amount: float = Field(description="Total price for this line item")
 
+
 class ReceiptData(BaseModel):
+    """Canonical schema used everywhere downstream: evaluator, Zoho client, dashboard.
+    Kept exactly as in the original approach — this part didn't need to change."""
     vendor_name: str = Field(description="Name of the business or vendor issuing the bill")
     bill_number: Optional[str] = Field(default=None, description="Invoice or bill reference number if visible")
     date: str = Field(description="Date of purchase in YYYY-MM-DD format")
@@ -18,3 +22,37 @@ class ReceiptData(BaseModel):
     tax_amount: Optional[float] = Field(default=0.0, description="Total tax amount (GST/VAT) if visible")
     total_amount: float = Field(description="Final grand total amount paid or due")
     payment_mode: Optional[str] = Field(default="Cash", description="Payment method used (e.g., Cash, Card, UPI)")
+
+
+# --- CHANGE ---------------------------------------------------------------
+# Gemini's structured-output (response_schema) rejects any Pydantic field that
+# has a `default` / `default_factory`, raising:
+#   ValueError: Default value is not supported in the response schema for the Gemini API
+# ReceiptData above has five such fields (bill_number, currency, subtotal,
+# tax_amount, payment_mode) plus LineItem.quantity/unit_price, so passing
+# ReceiptData straight into response_schema=... will crash on every call.
+#
+# Fix: give Gemini a twin schema with no defaults (everything required).
+# The model will always emit a value for every field (empty string / 0 if it
+# genuinely can't read one), and we then load that JSON into the *original*
+# ReceiptData for everything downstream, so nothing else in the pipeline
+# needs to know this schema exists.
+# ---------------------------------------------------------------------------
+
+class GeminiLineItem(BaseModel):
+    description: str
+    quantity: float
+    unit_price: float
+    total_amount: float
+
+
+class GeminiReceiptData(BaseModel):
+    vendor_name: str
+    bill_number: str  # use "" when not visible — Gemini schema can't do Optional+default
+    date: str
+    currency: str
+    line_items: List[GeminiLineItem]
+    subtotal: float
+    tax_amount: float
+    total_amount: float
+    payment_mode: str

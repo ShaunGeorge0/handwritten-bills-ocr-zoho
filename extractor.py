@@ -35,7 +35,7 @@ Analyze this receipt/bill image carefully and extract all information strictly a
 # gemini-1.5-flash and gpt-4o-mini and claude-3-5-sonnet-20241022 (the
 # original picks) are all retired/404 as of this writing.
 # ---------------------------------------------------------------------------
-GEMINI_MODEL = "gemini-2.5-flash"          # ~$0.15 / $1.25 per 1M tokens (in/out)
+GEMINI_MODEL = "gemini-3.6-flash"          # ~$1.50 / $7.50 per 1M tokens (in/out), current as of Aug 2026        # ~$0.15 / $1.25 per 1M tokens (in/out)
 OPENAI_MODEL = "gpt-5-mini"                # ~$0.25 / $2.00 per 1M tokens, vision-capable
 CLAUDE_MODEL = "claude-haiku-4-5-20251001"  # ~$1.00 / $5.00 per 1M tokens
 # NOTE: if you swap in claude-sonnet-5 or claude-opus-4-8 for a higher-tier
@@ -75,7 +75,7 @@ def extract_with_gemini(image_path: str) -> ExtractionResult:
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     encoded_bytes = Path(image_path).read_bytes()
-    mime_type, _ = encode_image(image_path)
+    _, mime_type = encode_image(image_path)
 
     start = time.time()
     response = client.models.generate_content(
@@ -89,7 +89,7 @@ def extract_with_gemini(image_path: str) -> ExtractionResult:
             # CHANGE: was response_schema=ReceiptData, which has Field defaults
             # and raises ValueError on every call. Use the defaults-free twin.
             response_schema=GeminiReceiptData,
-            temperature=0.1
+            
         )
     )
     latency = time.time() - start

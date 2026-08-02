@@ -23,7 +23,7 @@ from zoho_client import ZohoBooksClient
 st.set_page_config(page_title="Handwritten Bill Extractor — Model Comparison", layout="wide")
 
 MODEL_FNS = {
-    "Gemini 2.5 Flash": extract_with_gemini,
+    "Gemini 3.6 Flash": extract_with_gemini,
     "GPT-5 Mini": extract_with_openai,
     "Claude Haiku 4.5": extract_with_claude,
 }
