@@ -1,7 +1,7 @@
 # main.py
 import os
 import argparse
-from extractor import extract_with_gemini, extract_with_openai, extract_with_claude
+from extractor import extract_with_gemini, extract_with_nemotron
 from zoho_client import ZohoBooksClient
 
 
@@ -11,12 +11,10 @@ def process_bill(image_path: str, model_provider: str = "gemini", post_to_zoho: 
     # Select LLM Extractor
     if model_provider.lower() == "gemini":
         result = extract_with_gemini(image_path)
-    elif model_provider.lower() == "openai":
-        result = extract_with_openai(image_path)
-    elif model_provider.lower() == "claude":
-        result = extract_with_claude(image_path)
+    elif model_provider.lower() == "nemotron":
+        result = extract_with_nemotron(image_path)
     else:
-        raise ValueError("Unsupported provider. Choose 'gemini', 'openai', or 'claude'.")
+        raise ValueError("Unsupported provider. Choose 'gemini' or 'nemotron'.")
 
     # CHANGE: extract_with_* now return an ExtractionResult (data + token
     # usage + latency) instead of a bare ReceiptData, so the pipeline can
@@ -39,7 +37,7 @@ def process_bill(image_path: str, model_provider: str = "gemini", post_to_zoho: 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Handwritten Bill OCR & Zoho Books Pipeline")
     parser.add_argument("--image", type=str, default="data/images/bill_01.jpg", help="Path to receipt image")
-    parser.add_argument("--model", type=str, default="gemini", choices=["gemini", "openai", "claude"], help="Vision model provider")
+    parser.add_argument("--model", type=str, default="gemini", choices=["gemini", "nemotron"], help="Vision model provider")
     parser.add_argument("--no-zoho", action="store_true", help="Skip posting to Zoho Books")
 
     args = parser.parse_args()

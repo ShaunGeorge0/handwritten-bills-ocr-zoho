@@ -3,7 +3,7 @@ import os
 import json
 import difflib
 from schemas import ReceiptData
-from extractor import extract_with_gemini, extract_with_openai, extract_with_claude
+from extractor import extract_with_gemini, extract_with_nemotron
 
 GROUND_TRUTH_PATH = "data/ground_truth.json"
 IMAGES_DIR = "data/images"
@@ -16,18 +16,21 @@ RESULTS_JSON_PATH = "results.json"
 # 100 bills extrapolated)". extract_with_* now return token usage, so we can
 # compute this from what the API actually reports rather than guessing.
 #
-# Rates below are USD per 1M tokens, current as of Aug 2026 (cross-checked
-# against provider + third-party pricing pages at the time this was written).
-# VERIFY these again before you trust the numbers in your write-up — token
-# pricing on all three providers has moved multiple times in 2026:
-#   Gemini:  https://ai.google.dev/gemini-api/docs/pricing
-#   OpenAI:  https://platform.openai.com/docs/pricing
-#   Claude:  https://www.anthropic.com/pricing
+# Nemotron Nano 12B VL is $0/$0 per token on OpenRouter's free tier (verified
+# Aug 2026), so its entry below is $0 by design, not a placeholder. Worth
+# calling out explicitly in the write-up: with a free model in the mix, the
+# real constraint isn't $ cost, it's OpenRouter's free-tier rate limits
+# (requests/min and tokens/min) — extract_with_nemotron retries on 429s, but
+# a saturated shared pool still slows a batch run down more than money will.
+#
+# Gemini rate below is USD per 1M tokens, current as of Aug 2026 — VERIFY
+# again before you trust the number in your write-up, it moves over time:
+#   Gemini:     https://ai.google.dev/gemini-api/docs/pricing
+#   OpenRouter: https://openrouter.ai/models (per-model "$0/M" tag = free)
 # ------------------------------------------------------------------------------
 PRICING_USD_PER_MILLION_TOKENS = {
-    "Gemini 3.6 Flash": {"input": 1.50, "output": 7.50},
-    "GPT-5 Mini": {"input": 0.25, "output": 2.00},
-    "Claude Haiku 4.5": {"input": 1.00, "output": 5.00},
+    "Gemini 3.5 Flash-Lite": {"input": 0.30, "output": 2.50},
+    "Nemotron Nano 12B VL (OpenRouter, free)": {"input": 0.0, "output": 0.0},
 }
 
 # --- CHANGE -----------------------------------------------------------------
@@ -101,9 +104,8 @@ def evaluate_models():
         ground_truth = json.load(f)
 
     models = {
-        "Gemini 3.6 Flash": extract_with_gemini,
-        "GPT-5 Mini": extract_with_openai,
-        "Claude Haiku 4.5": extract_with_claude,
+        "Gemini 3.5 Flash-Lite": extract_with_gemini,
+        "Nemotron Nano 12B VL (OpenRouter, free)": extract_with_nemotron,
     }
 
     summary = {}

@@ -17,15 +17,14 @@ import tempfile
 import pandas as pd
 import streamlit as st
 
-from extractor import extract_with_gemini, extract_with_openai, extract_with_claude
+from extractor import extract_with_gemini, extract_with_nemotron
 from zoho_client import ZohoBooksClient
 
 st.set_page_config(page_title="Handwritten Bill Extractor — Model Comparison", layout="wide")
 
 MODEL_FNS = {
-    "Gemini 3.6 Flash": extract_with_gemini,
-    "GPT-5 Mini": extract_with_openai,
-    "Claude Haiku 4.5": extract_with_claude,
+    "Gemini 3.5 Flash-Lite": extract_with_gemini,
+    "Nemotron Nano 12B VL (OpenRouter, free)": extract_with_nemotron,
 }
 
 st.title("📄 Handwritten Bill Extractor")

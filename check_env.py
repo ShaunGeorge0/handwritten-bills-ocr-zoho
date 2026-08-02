@@ -8,8 +8,7 @@ def check_all():
     print("=== Checking Configured Environment Variables ===")
     keys = [
         "GEMINI_API_KEY",
-        "OPENAI_API_KEY",
-        "ANTHROPIC_API_KEY",
+        "OPENROUTER_API_KEY",
         "ZOHO_CLIENT_ID",
         "ZOHO_CLIENT_SECRET",
         "ZOHO_REFRESH_TOKEN",
