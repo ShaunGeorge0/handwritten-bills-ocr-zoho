@@ -93,11 +93,12 @@ Each field's accuracy is reported separately per model rather than blended into 
 
 ## Accuracy and cost comparison
 
-*Fill this in with the contents of `results.md` after running `python evaluator.py` on your dataset. Template below.*
-Model Comparison — Handwritten Bill Extraction
-Model	bill_number acc %	currency acc %	date acc %	tax_amount acc %	total_amount acc %	vendor_name acc %	Avg Latency (s)	Cost / Bill (USD)	Cost / 100 Bills (USD)
-Gemini 3.5 Flash-Lite	100.0	73.3	75.0	93.3	86.7	100.0	1.9	0.00099	0.1
-Nemotron Nano 12B VL (OpenRouter, free)	85.7	100.0	37.5	90.0	60.0	80.0	6.01	0.0	0.0
+## Model Comparison — Handwritten Bill Extraction
+
+| Model | Bill Number Acc (%) | Currency Acc (%) | Date Acc (%) | Tax Amount Acc (%) | Total Amount Acc (%) | Vendor Name Acc (%) | Avg Latency (s) | Cost / Bill (USD) | Cost / 100 Bills (USD) |
+|--------|--------------------:|-----------------:|-------------:|-------------------:|---------------------:|--------------------:|----------------:|------------------:|------------------------:|
+| Gemini 3.5 Flash-Lite | 100.0 | 73.3 | 75.0 | 93.3 | 86.7 | 100.0 | 1.90 | 0.00099 | 0.10 |
+| Nemotron Nano 12B VL (OpenRouter, Free) | 85.7 | 100.0 | 37.5 | 90.0 | 60.0 | 80.0 | 6.01 | 0.00000 | 0.00 |
 
 
 ## Final recommendation
