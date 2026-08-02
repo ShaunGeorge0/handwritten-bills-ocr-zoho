@@ -1,0 +1,122 @@
+{
+  "bill_01.jpg": {
+    "vendor_name": "CSSM BOOK HOUSE",
+    "bill_number": "236",
+    "date": "2025-11-27",
+    "total_amount": 3500.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_02.jpg": {
+    "vendor_name": "FLOWER MART",
+    "bill_number": "137",
+    "date": "2024-09-21",
+    "total_amount": 1030.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_03.jpg": {
+    "vendor_name": "JOSE PRINTERS",
+    "bill_number": "186",
+    "date": "2024-12-02",
+    "total_amount": 3950.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_04.jpg": {
+    "vendor_name": "PRINCY TRAVELS",
+    "bill_number": "023",
+    "date": "2025-07-27",
+    "total_amount": 29500.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_05.jpg": {
+    "vendor_name": "JO DESIGNS",
+    "bill_number": "120",
+    "date": "2025-12-13",
+    "total_amount": 400.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_06.jpg": {
+    "vendor_name": "Basil Industries",
+    "bill_number": "991",
+    "date": "2025-11-25",
+    "total_amount": 1300.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_07.jpg": {
+    "vendor_name": "Seed 'N' Plants",
+    "bill_number": "8850",
+    "date": null,
+    "total_amount": 1750.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_08.jpg": {
+    "vendor_name": "",
+    "bill_number": "1048",
+    "date": "2026-02-12",
+    "total_amount": 1260.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_09.jpg": {
+    "vendor_name": "SPLASH FOOTWARES AND GIFTS",
+    "bill_number": "4231",
+    "date": "2024-11-09",
+    "total_amount": 12.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_10.jpg": {
+    "vendor_name": "JK CEMENT",
+    "bill_number": null,
+    "date": "2023-12-22",
+    "total_amount": 22.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_11.jpg": {
+    "vendor_name": "RAHATH FOODS",
+    "bill_number": "6453",
+    "date": "2024-11-09",
+    "total_amount": 1920.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_12.jpg": {
+    "vendor_name": "",
+    "bill_number": null,
+    "date": null,
+    "total_amount": 820.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_13.jpg": {
+    "vendor_name": "ALANKAR GIFTS",
+    "bill_number": "4691",
+    "date": "2020-03-09",
+    "total_amount": 3550.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_14.jpg": {
+    "vendor_name": "BISMI STORES",
+    "bill_number": "026",
+    "date": null,
+    "total_amount": 13000.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  },
+  "bill_15.jpg": {
+    "vendor_name": "Philip",
+    "bill_number": null,
+    "date": "2025-07-16",
+    "total_amount": 1230.0,
+    "currency": "INR",
+    "tax_amount": 0.0
+  }
+}
