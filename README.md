@@ -103,16 +103,18 @@ Each field's accuracy is reported separately per model rather than blended into 
 
 ## Final recommendation
 
-*Fill this in once the table above has real numbers. A few questions worth answering explicitly rather than just naming a winner:*
+From the evaluation, Gemini 3.5 Flash-Lite is the stronger overall model for handwritten bill extraction. It achieved higher accuracy across most key fields while maintaining very low inference cost and fast response times.
 
-- **Which model has the highest accuracy on the fields that matter most for an expense entry** — total amount and date are the two fields an accounting system actually depends on being correct, so weigh those more heavily than vendor name or tax.
-- **Does the more accurate model's cost premium hold up at scale.** A model that's 5 percent more accurate but 4 times the price might be worth it if you're processing a handful of bills a month and not worth it at thousands of bills a month. Use the cost-per-100-bills figure to make this concrete.
-- **Is the same model right for both digital and handwritten bills, or does this warrant two different pipelines.** Digital invoices are close to a solved problem for any of these models, so it may make sense to route digital documents to the cheapest model available and reserve the more accurate model for handwritten ones specifically, rather than paying the handwriting-tier price for every document.
-- **Where each model actually failed.** A quick look at `results.json` for the bills a model got wrong often reveals a pattern — faint ink, a specific handwriting style or a particular bill layout — that's more useful for the write-up than the aggregate percentage alone.
+Highest accuracy on critical accounting fields: The most important fields for expense management are Total Amount and Date, since these directly affect financial records. Gemini achieved 86.7% accuracy on Total Amount compared to 60.0% for Nemotron, and 75.0% accuracy on Date compared to 37.5%. Gemini also achieved 100.0% accuracy on Bill Number and Vendor Name, making it the more reliable choice for extracting essential invoice information.
+Cost versus accuracy: Although Gemini is not free, its cost is extremely low—approximately $0.00099 per bill or $0.10 per 100 bills. In contrast, Nemotron Nano 12B VL is free to use through OpenRouter, but the reduction in extraction accuracy is significant, especially for the fields that matter most. For most real-world expense management applications, the small additional cost of Gemini is justified by the substantial improvement in data quality.
+Suitability for different document types: For handwritten bills, Gemini is the recommended model because handwritten documents present greater OCR and reasoning challenges. For digital or printed invoices, where text is generally easier to recognize, a free model such as Nemotron may be sufficient. A hybrid pipeline could therefore reduce operational costs by routing printed invoices to Nemotron while reserving Gemini for handwritten receipts that require higher extraction accuracy.
+Observed failure patterns: Gemini's primary errors occurred in fields such as Currency, Tax Amount, and occasionally Total Amount, while still maintaining high overall consistency. Nemotron showed larger performance drops in Date and Total Amount extraction, indicating greater difficulty interpreting handwritten numeric information. These errors suggest that handwriting style, image quality, and bill layout have a greater impact on Nemotron's extraction performance than on Gemini's.
 
 ## Bonus dashboard
 
-`dashboard.py` is a minimal Streamlit app: upload a bill photo, choose which models to run and see every extracted field laid out side by side in a table along with latency, token counts and each model's line items. A model's extraction can be posted straight to Zoho Books from the same screen. Run locally with `streamlit run dashboard.py` — no separate hosting needed for this to work as a deliverable.
+`dashboard.py` is a minimal Streamlit app: upload a bill photo, choose which models to run and see every extracted field laid out side by side in a table along with latency, token counts and each model's line items. A model's extraction can be posted straight to Zoho Books from the same screen. Run locally with `streamlit run dashboard.py` 
+## Dashboard Link
+Streamlit LINK : https://handwritten-bills-ocr-zohogit-5ga6xsjryvk6xeujhhejcm.streamlit.app/
 
 ## Known limitations
 
