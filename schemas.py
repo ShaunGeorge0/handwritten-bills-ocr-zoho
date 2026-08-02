@@ -12,31 +12,45 @@ class LineItem(BaseModel):
 
 class ReceiptData(BaseModel):
     """Canonical schema used everywhere downstream: evaluator, Zoho client, dashboard.
-    Kept exactly as in the original approach — this part didn't need to change."""
+
+    --- CHANGE ---------------------------------------------------------------
+    Ground truth moved from a numeric `tax_amount` field to a `gst_number`
+    field (the vendor's GSTIN — a printed/handwritten identifier, not a
+    computed amount) and added `description`, a short one-line summary of
+    what the bill is for. Both are now genuinely extracted fields, not
+    derived ones — the model has to read/infer them off the bill image, see
+    the updated PROMPT_TEXT in extractor.py.
+    ----------------------------------------------------------------------------
+    """
     vendor_name: str = Field(description="Name of the business or vendor issuing the bill")
     bill_number: Optional[str] = Field(default=None, description="Invoice or bill reference number if visible")
     date: str = Field(description="Date of purchase in YYYY-MM-DD format")
     currency: str = Field(default="INR", description="3-letter ISO currency code (e.g., INR, USD)")
     line_items: List[LineItem] = Field(default_factory=list, description="List of itemized goods or services")
     subtotal: Optional[float] = Field(default=None, description="Subtotal before taxes")
-    tax_amount: Optional[float] = Field(default=0.0, description="Total tax amount (GST/VAT) if visible")
+    gst_number: Optional[str] = Field(
+        default=None,
+        description="Vendor's GST identification number (GSTIN) if printed or handwritten on the bill, else null",
+    )
     total_amount: float = Field(description="Final grand total amount paid or due")
     payment_mode: Optional[str] = Field(default="Cash", description="Payment method used (e.g., Cash, Card, UPI)")
+    description: Optional[str] = Field(
+        default=None,
+        description=(
+            "Short one-line summary of what the bill is for, e.g. 'Grocery purchase', "
+            "'Printing services', 'Restaurant bill' — inferred from vendor name and line items"
+        ),
+    )
 
 
-# --- CHANGE ---------------------------------------------------------------
-# Gemini's structured-output (response_schema) rejects any Pydantic field that
-# has a `default` / `default_factory`, raising:
-#   ValueError: Default value is not supported in the response schema for the Gemini API
-# ReceiptData above has five such fields (bill_number, currency, subtotal,
-# tax_amount, payment_mode) plus LineItem.quantity/unit_price, so passing
-# ReceiptData straight into response_schema=... will crash on every call.
-#
-# Fix: give Gemini a twin schema with no defaults (everything required).
-# The model will always emit a value for every field (empty string / 0 if it
-# genuinely can't read one), and we then load that JSON into the *original*
-# ReceiptData for everything downstream, so nothing else in the pipeline
-# needs to know this schema exists.
+# --- CHANGE -----------------------------------------------------------------
+# Gemini's structured-output (response_schema) rejects any Pydantic field with
+# a `default` / `default_factory`. GeminiReceiptData is the defaults-free twin
+# used only for the Gemini call (see extract_with_gemini in extractor.py);
+# its JSON is then loaded into the ReceiptData above for everything
+# downstream. Updated in lockstep with ReceiptData: gst_number and
+# description added as required string fields ("" when not applicable,
+# following the same convention already used for bill_number).
 # ---------------------------------------------------------------------------
 
 class GeminiLineItem(BaseModel):
@@ -53,6 +67,7 @@ class GeminiReceiptData(BaseModel):
     currency: str
     line_items: List[GeminiLineItem]
     subtotal: float
-    tax_amount: float
+    gst_number: str  # use "" when not visible
     total_amount: float
     payment_mode: str
+    description: str  # always producible — inferred, not read off the bill

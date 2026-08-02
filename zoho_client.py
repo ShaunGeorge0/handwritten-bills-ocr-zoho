@@ -98,7 +98,15 @@ class ZohoBooksClient:
 
         vendor_id = self.get_or_create_vendor_id(access_token, receipt.vendor_name)
 
-        description = f"Auto-ingested handwritten bill ({receipt.vendor_name}). Line items: {len(receipt.line_items)}"
+        # CHANGE: receipt.description (schemas.py) now exists — use it when the
+        # model produced one instead of a generic fallback string. Ground truth
+        # also moved from tax_amount to gst_number; there's no native GSTIN
+        # field on Zoho Books' expense payload, so it's appended to the
+        # description text instead, same as the vendor-name fallback below.
+        bill_summary = receipt.description or "Auto-ingested handwritten bill"
+        description = f"{bill_summary} ({receipt.vendor_name}). Line items: {len(receipt.line_items)}"
+        if receipt.gst_number:
+            description += f" | GSTIN: {receipt.gst_number}"
         if not vendor_id:
             description = f"[Vendor: {receipt.vendor_name}] " + description
 

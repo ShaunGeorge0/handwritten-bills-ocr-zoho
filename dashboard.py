@@ -77,7 +77,8 @@ if results:
 
     if ok_results:
         # one column of fields, one column per model — easy to eyeball differences
-        field_names = ["vendor_name", "bill_number", "date", "currency", "subtotal", "tax_amount", "total_amount", "payment_mode"]
+        # CHANGE: tax_amount -> gst_number (ground truth schema change), plus description added
+        field_names = ["vendor_name", "bill_number", "date", "currency", "subtotal", "gst_number", "total_amount", "payment_mode", "description"]
         table = {"Field": field_names}
         for model_name, result in ok_results.items():
             table[model_name] = [getattr(result.data, f) for f in field_names]
