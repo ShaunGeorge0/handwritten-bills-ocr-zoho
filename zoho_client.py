@@ -7,6 +7,33 @@ from schemas import ReceiptData
 
 load_dotenv()
 
+
+def _get_config(key: str, default: str | None = None) -> str | None:
+    """Reads a config value from, in order: OS env vars (.env locally),
+    then Streamlit secrets (st.secrets — used on Streamlit Community Cloud,
+    where .env is never present because it's gitignored). Whitespace is
+    stripped either way, since a stray trailing space/newline pasted into
+    .env or secrets.toml turns a valid client_id/secret into an invalid one
+    and Zoho reports that back as the generic "invalid_client" error.
+
+    CHANGE: previously this was a bare os.getenv() call inline in __init__.
+    On a local run with a properly filled-in .env that's fine, but on
+    Streamlit Cloud there is no .env file (it's excluded via .gitignore),
+    so every one of these returned None and the OAuth request was sent
+    with client_id="None" / client_secret="None" — which Zoho correctly
+    rejects as invalid_client. This fallback makes the same code work in
+    both environments without needing two separate config paths.
+    """
+    val = os.getenv(key)
+    if val is None:
+        try:
+            import streamlit as st
+            val = st.secrets.get(key)
+        except Exception:
+            val = None
+    return val.strip() if isinstance(val, str) else (val if val is not None else default)
+
+
 # CHANGE: Keyword rules used to route each receipt to the right Zoho expense
 # category instead of a single hardcoded account. Matched (word-boundary,
 # case-insensitive) against `description` and `vendor_name` together — the
@@ -48,35 +75,59 @@ CATEGORY_KEYWORDS = {
 
 class ZohoBooksClient:
     def __init__(self):
-        self.accounts_url = os.getenv("ZOHO_ACCOUNTS_URL", "https://accounts.zoho.in")
-        self.api_base_url = os.getenv("ZOHO_API_BASE_URL", "https://www.zohoapis.in/books/v3")
-        self.client_id = os.getenv("ZOHO_CLIENT_ID")
-        self.client_secret = os.getenv("ZOHO_CLIENT_SECRET")
-        self.refresh_token = os.getenv("ZOHO_REFRESH_TOKEN")
-        self.organization_id = os.getenv("ZOHO_ORGANIZATION_ID")
+        self.accounts_url = _get_config("ZOHO_ACCOUNTS_URL", "https://accounts.zoho.in")
+        self.api_base_url = _get_config("ZOHO_API_BASE_URL", "https://www.zohoapis.in/books/v3")
+        self.client_id = _get_config("ZOHO_CLIENT_ID")
+        self.client_secret = _get_config("ZOHO_CLIENT_SECRET")
+        self.refresh_token = _get_config("ZOHO_REFRESH_TOKEN")
+        self.organization_id = _get_config("ZOHO_ORGANIZATION_ID")
         # CHANGE: expenses used to all go to a single hardcoded account.
         # Now each category has its own account_id, with ZOHO_ACCOUNT_OTHER_EXPENSES
         # as the fallback for anything that doesn't match a keyword rule below.
         # ZOHO_EXPENSE_ACCOUNT_ID is kept as a last-resort default in case the
         # other_expenses account isn't configured either, so a missing .env
         # entry fails loudly at the Zoho API rather than crashing here.
-        self.expense_account_id = os.getenv("ZOHO_EXPENSE_ACCOUNT_ID")
+        self.expense_account_id = _get_config("ZOHO_EXPENSE_ACCOUNT_ID")
         self.category_account_ids = {
-            "printing": os.getenv("ZOHO_ACCOUNT_PRINTING"),
-            "travel": os.getenv("ZOHO_ACCOUNT_TRAVEL"),
+            "printing": _get_config("ZOHO_ACCOUNT_PRINTING"),
+            "travel": _get_config("ZOHO_ACCOUNT_TRAVEL"),
             # NOTE: your .env uses ZOHO_RAWMATERIALS_CONSUMABLES (no "ACCOUNT"
             # in the name, unlike the others) — matched here exactly as you
             # have it. Rename it if you'd rather keep the naming consistent.
-            "rawmaterials_consumables": os.getenv("ZOHO_RAWMATERIALS_CONSUMABLES"),
-            "meal_entertainment": os.getenv("ZOHO_ACCOUNT_MEAL_ENTERTAINMENT"),
-            "other_expenses": os.getenv("ZOHO_ACCOUNT_OTHER_EXPENSES"),
+            "rawmaterials_consumables": _get_config("ZOHO_RAWMATERIALS_CONSUMABLES"),
+            "meal_entertainment": _get_config("ZOHO_ACCOUNT_MEAL_ENTERTAINMENT"),
+            "other_expenses": _get_config("ZOHO_ACCOUNT_OTHER_EXPENSES"),
         }
         # CHANGE: this was missing entirely. Zoho Books' Create Expense API
         # requires paid_through_account_id (the cash/bank account the money
         # left from) in addition to account_id (the expense category it's
         # booked against) — without it the API returns a validation error.
-        self.paid_through_account_id = os.getenv("ZOHO_PAID_THROUGH_ACCOUNT_ID")
+        self.paid_through_account_id = _get_config("ZOHO_PAID_THROUGH_ACCOUNT_ID")
         self._vendor_cache: dict[str, str] = {}
+
+        # CHANGE: fail fast with a clear, actionable message instead of
+        # letting a missing credential travel all the way to Zoho and come
+        # back as an opaque "invalid_client". This is the single most common
+        # cause of that error — on Streamlit Community Cloud in particular,
+        # .env is never deployed (it's gitignored), so without this check
+        # the app would call Zoho with client_id/client_secret literally
+        # set to None and silently degrade into a confusing OAuth error.
+        missing = [
+            name for name, val in [
+                ("ZOHO_CLIENT_ID", self.client_id),
+                ("ZOHO_CLIENT_SECRET", self.client_secret),
+                ("ZOHO_REFRESH_TOKEN", self.refresh_token),
+                ("ZOHO_ORGANIZATION_ID", self.organization_id),
+            ] if not val
+        ]
+        if missing:
+            raise RuntimeError(
+                "Missing Zoho credential(s): " + ", ".join(missing) + ". "
+                "Set these in a local .env file (see .env.example), or, if this "
+                "is running on Streamlit Community Cloud, add them under "
+                "App settings -> Secrets (they are NOT read from .env there, "
+                "since .env is gitignored and never deployed)."
+            )
 
     def get_access_token(self) -> str:
         """Exchanges permanent refresh token for a live 1-hour access token."""
@@ -88,10 +139,24 @@ class ZohoBooksClient:
             "grant_type": "refresh_token"
         }
         response = requests.post(url, params=params)
-        if response.status_code == 200 and "access_token" in response.json():
-            return response.json()["access_token"]
-        else:
-            raise RuntimeError(f"Failed to fetch Zoho access token: {response.text}")
+        data = response.json() if response.content else {}
+        if response.status_code == 200 and "access_token" in data:
+            return data["access_token"]
+
+        error = data.get("error", response.text)
+        if error == "invalid_client":
+            raise RuntimeError(
+                "Failed to fetch Zoho access token: invalid_client. This means Zoho "
+                "rejected your ZOHO_CLIENT_ID / ZOHO_CLIENT_SECRET pair. Check that: "
+                "(1) both values are copied exactly from the Zoho API Console with no "
+                "extra spaces/newlines, (2) the refresh token in ZOHO_REFRESH_TOKEN was "
+                f"generated using this SAME client_id/secret pair, and (3) ZOHO_ACCOUNTS_URL "
+                f"(currently '{self.accounts_url}') matches the data center your Zoho "
+                "client was registered in (accounts.zoho.in for India, accounts.zoho.com "
+                "for the US/global, accounts.zoho.eu for Europe, etc.) — a mismatch here "
+                "also surfaces as invalid_client."
+            )
+        raise RuntimeError(f"Failed to fetch Zoho access token: {response.text}")
 
     # --- CHANGE -------------------------------------------------------
     # The original code sent `"vendor_name": receipt.vendor_name` directly
@@ -153,13 +218,9 @@ class ZohoBooksClient:
                     return account_id
                 # Keyword matched but that category's account_id isn't
                 # configured in .env — fall through to other_expenses
-                # rather than silently posting with no account_id at all.
                 break
 
-        return (
-            self.category_account_ids.get("other_expenses")
-            or self.expense_account_id
-        )
+        return self.category_account_ids.get("other_expenses") or self.expense_account_id
 
     def create_expense(self, receipt: ReceiptData) -> dict:
         """Posts structured receipt data to Zoho Books as a new expense entry."""
