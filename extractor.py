@@ -229,8 +229,11 @@ def _extract_with_openrouter(image_path: str, model_id: str) -> ExtractionResult
             message = response.choices[0].message
             if not message.tool_calls:
                 raise RuntimeError(f"{model_id} failed to produce a tool call.")
-
-            parsed_json = json.loads(message.tool_calls[0].function.arguments)
+            
+            try:
+                parsed_json = json.loads(message.tool_calls[0].function.arguments)
+            except json.JSONDecodeError as e:
+                raise RuntimeError(f"{model_id} returned malformed JSON: {e}")  
             receipt = ReceiptData(**parsed_json)
 
             usage = response.usage
